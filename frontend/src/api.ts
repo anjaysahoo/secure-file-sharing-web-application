@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import { NavigateFunction } from 'react-router-dom';
 
 interface User {
   username: string;

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
+import { Button } from "@/components/ui/button";
 
 const UploadFile: React.FC = () => {
     const [file, setFile] = useState<File | null>(null);
@@ -62,9 +63,9 @@ const UploadFile: React.FC = () => {
                                     onChange={onFileChange}
                                 />
                             </div>
-                            <button type="submit" className="btn btn-primary">
+                            <Button type="submit">
                                 Upload
-                            </button>
+                            </Button>
                         </form>
                         {message && (
                             <div className="alert alert-info mt-3">

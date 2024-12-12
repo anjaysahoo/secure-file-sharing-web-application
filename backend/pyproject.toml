@@ -1,0 +1,22 @@
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.115.5"
+pydantic-settings = "^2.6.1"
+bcrypt = "^4.2.1"
+redis = "^5.2.0"
+python-multipart = "^0.0.17"
+aiofiles = "^24.1.0"
+alembic = "^1.14.0"
+uvicorn = "^0.32.1"
+fastapi-jwt = { extras = ["authlib"], version = "^0.3.0" }
+asyncmy = "^0.2.9"
+greenlet = "^3.1.1"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.36"}
+pymysql = "^1.1.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.10.0"
+

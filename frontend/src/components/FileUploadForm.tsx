@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
+import { Button } from "@/components/ui/button";
 
 interface FileUploadFormProps {
     onUploadSuccess: () => void;
@@ -77,13 +78,12 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({ onUploadSuccess, onMess
 
     return (
         <div className="mb-4 d-flex align-items-center">
-            <button 
+            <Button
                 type="button" 
-                className="btn btn-primary mr-3" 
                 onClick={uploadFile}
             >
                 Upload
-            </button>
+            </Button>
             <div 
                 className={`file-drop-area ${dragging ? 'dragging' : ''}`}
                 onDragOver={handleDragOver}
