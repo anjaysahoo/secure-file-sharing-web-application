@@ -2,6 +2,12 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Download, Shield, Trash2 } from "lucide-react";
 
 interface FileActionsProps {
     fileId: number;
@@ -51,10 +57,8 @@ const FileActions: React.FC<FileActionsProps> = ({ fileId, fileName, onDelete, o
             onDelete(fileId);
             setMessage('File deleted successfully.');
             setShowDeleteConfirm(false);
-            console.log('File deleted:', response.data);
         } catch (err: any) {
             setMessage('Failed to delete file: ' + (err.response?.data?.detail || err.message));
-            console.error('Failed to delete file:', err);
         }
     };
 
@@ -72,112 +76,91 @@ const FileActions: React.FC<FileActionsProps> = ({ fileId, fileName, onDelete, o
                 action
             });
             setMessage(response.data.message);
-            console.log('Access managed:', response.data);
         } catch (err: any) {
             setMessage('Failed to manage access: ' + (err.response?.data?.detail || err.message));
-            console.error('Failed to manage access:', err);
         }
     };
 
-    const closeDeleteConfirm = () => {
-        setShowDeleteConfirm(false);
-        setMessage('');
-    };
-
-    const closeModal = () => {
-        setShowModal(false);
-        setUsername('');
-        setAction('grant');
-        setMessage('');
-    };
-
     return (
-        <td className="text-center">
-            <div className="btn-group">
-                <button onClick={handleDownload} className="btn btn-link p-0 me-3">
-                    <i className="fas fa-download fa-lg text-primary"></i>
-                </button>
-                {isAdmin && (
-                    <>
-                        <button onClick={() => setShowModal(true)} className="btn btn-link p-0 me-3">
-                            <i className="fas fa-user-shield fa-lg text-info"></i>
-                        </button>
-                        <button onClick={() => setShowDeleteConfirm(true)} className="btn btn-link p-0">
-                            <i className="fas fa-trash-alt fa-lg text-danger"></i>
-                        </button>
-                    </>
-                )}
-            </div>
-
-            {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
+        <div className="flex items-center justify-center gap-2">
+            <Button variant="ghost" size="icon" onClick={handleDownload} title="Download">
+                <Download className="h-4 w-4" />
+            </Button>
+            
+            {isAdmin && (
                 <>
-                    <div className="modal-backdrop show"></div>
-                    <div className="modal d-block" tabIndex={-1} role="dialog" aria-modal="true">
-                        <div className="modal-dialog modal-md modal-dialog-centered" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header border-0">
-                                    <button type="button" className="btn-close" onClick={closeDeleteConfirm} aria-label="Close"></button>
-                                </div>
-                                <div className="modal-body">
-                                    <p className="mb-5">Are you sure you want to delete <strong>{fileName}</strong>?</p>
-                                    <div className="d-flex justify-content-center">
-                                        <button onClick={confirmDelete} className="btn btn-danger me-2">Delete</button>
-                                        <button onClick={closeDeleteConfirm} className="btn btn-secondary">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <Button variant="ghost" size="icon" onClick={() => setShowModal(true)} title="Manage Access">
+                        <Shield className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => setShowDeleteConfirm(true)} title="Delete">
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                    </Button>
                 </>
             )}
 
-            {/* Access Management Modal */}
-            {showModal && (
-                <>
-                    <div className="modal-backdrop show"></div>
-                    <div className="modal d-block" tabIndex={-1} role="dialog" aria-modal="true">
-                        <div className="modal-dialog modal-m modal-dialog-centered" role="document">
-                            <div className="modal-content">
-                                <div className="modal-header border-0">
-                                    <h6 className="modal-title">Manage Access for <strong>{fileName}</strong></h6>
-                                    <button type="button" className="btn-close" onClick={closeModal} aria-label="Close"></button>
-                                </div>
-                                <div className="modal-body">
-                                    <form onSubmit={toggleAccess}>
-                                        <div className="mb-3">
-                                            <input
-                                                value={username}
-                                                onChange={(e) => setUsername(e.target.value)}
-                                                type="text"
-                                                className="form-control"
-                                                id="username"
-                                                placeholder="Username"
-                                                required
-                                            />
-                                        </div>
-                                        <div className="mb-3">
-                                            <select
-                                                value={action}
-                                                onChange={(e) => setAction(e.target.value as 'grant' | 'revoke')}
-                                                className="form-select"
-                                                id="action"
-                                                required
-                                            >
-                                                <option value="grant">Grant access</option>
-                                                <option value="revoke">Revoke access</option>
-                                            </select>
-                                        </div>
-                                        <button type="submit" className="btn btn-primary mt-3">Submit</button>
-                                    </form>
-                                    {message && <div className="alert alert-info mt-3">{message}</div>}
-                                </div>
-                            </div>
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete File</DialogTitle>
+                    </DialogHeader>
+                    <p className="text-sm text-muted-foreground">
+                        Are you sure you want to delete <span className="font-medium">{fileName}</span>?
+                    </p>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={confirmDelete}>
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Access Management Dialog */}
+            <Dialog open={showModal} onOpenChange={setShowModal}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>
+                            Manage Access for {fileName}
+                        </DialogTitle>
+                    </DialogHeader>
+                    <form onSubmit={toggleAccess} className="space-y-4">
+                        <div className="space-y-2">
+                            <Input
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                                placeholder="Username"
+                                required
+                            />
                         </div>
-                    </div>
-                </>
-            )}
-        </td>
+                        <div className="space-y-2">
+                            <Select
+                                value={action}
+                                onValueChange={(value) => setAction(value as 'grant' | 'revoke')}
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select action" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="grant">Grant access</SelectItem>
+                                    <SelectItem value="revoke">Revoke access</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        {message && (
+                            <Alert>
+                                <AlertDescription>{message}</AlertDescription>
+                            </Alert>
+                        )}
+                        <DialogFooter>
+                            <Button type="submit">Submit</Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
+        </div>
     );
 };
 

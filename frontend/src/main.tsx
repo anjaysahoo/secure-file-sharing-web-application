@@ -6,7 +6,6 @@ import {
     createBrowserRouter,
     RouterProvider,
     Navigate,
-    Outlet
 } from "react-router-dom";
 import App from './App';
 import Login from "./components/Login";
@@ -15,6 +14,7 @@ import FileList from "./components/FileList";
 import UploadFile from "./components/UploadFile";
 import GrantAdmin from "./components/GrantAdmin";
 import UserStatistics from "./components/UserStatistics";
+import './index.css'
 
 // Protected Route wrapper component
 const ProtectedAdminRoute = ({ children }: { children: React.ReactNode }) => {
@@ -32,43 +32,43 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Navigate to="/login" replace />,
-            },
-            {
+        element: <Navigate to="/login" replace />,
+    },
+    {
                 path: "login",
-                element: <Login />,
-            },
-            {
+        element: <Login />,
+    },
+    {
                 path: "register",
-                element: <Register />,
-            },
-            {
+        element: <Register />,
+    },
+    {
                 path: "files",
-                element: <FileList />,
-            },
-            {
+        element: <FileList />,
+    },
+    {
                 path: "upload",
-                element: (
-                    <ProtectedAdminRoute>
-                        <UploadFile />
-                    </ProtectedAdminRoute>
-                ),
-            },
-            {
+        element: (
+            <ProtectedAdminRoute>
+                <UploadFile />
+            </ProtectedAdminRoute>
+        ),
+    },
+    {
                 path: "grant-admin",
-                element: (
-                    <ProtectedAdminRoute>
-                        <GrantAdmin />
-                    </ProtectedAdminRoute>
-                ),
-            },
-            {
+        element: (
+            <ProtectedAdminRoute>
+                <GrantAdmin />
+            </ProtectedAdminRoute>
+        ),
+    },
+    {
                 path: "statistics",
-                element: (
-                    <ProtectedAdminRoute>
-                        <UserStatistics />
-                    </ProtectedAdminRoute>
-                ),
+        element: (
+            <ProtectedAdminRoute>
+                <UserStatistics />
+            </ProtectedAdminRoute>
+        ),
             },
         ],
     },

@@ -3,6 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { login } from '../store/userSlice';
 import api from '../api';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -29,67 +32,49 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="card" style={styles.card}>
-                <div className="card-body p-4">
-                    <form onSubmit={handleLogin}>
-                        <div className="form-group mb-3">
-                            <input
+        <div className="container mx-auto px-4 flex items-center justify-center min-h-[80vh]">
+            <Card className="w-full max-w-md">
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleLogin} className="space-y-4">
+                        <div className="space-y-2">
+                            <Input
                                 type="text"
                                 id="username"
-                                className="form-control"
                                 placeholder="Enter your username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                style={styles.formControl}
                             />
                         </div>
-                        <div className="form-group mb-4">
-                            <input
+                        <div className="space-y-2">
+                            <Input
                                 type="password"
                                 id="password"
-                                className="form-control"
                                 placeholder="Enter your password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                style={styles.formControl}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary btn-block" style={styles.button}>
+                        <Button type="submit" className="w-full">
                             Login
-                        </button>
+                        </Button>
                     </form>
-                    {error && <div className="alert alert-danger mt-3" style={styles.alert}>{error}</div>}
-                    <div className="mt-3 text-center" style={styles.textCenter}>
-                        <a href="/register">Don't have an account? Register here</a>
+                    {error && (
+                        <div className="mt-4 p-3 text-sm text-destructive-foreground bg-destructive/10 rounded-md">
+                            {error}
+                        </div>
+                    )}
+                    <div className="mt-6 text-center text-sm">
+                        <a href="/register" className="text-primary hover:underline">
+                            Don't have an account? Register here
+                        </a>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };
-
-const styles = {
-    card: {
-        maxWidth: '500px',
-        margin: 'auto',
-        boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
-    },
-    formControl: {
-        borderRadius: '0.25rem',
-        padding: '0.75rem'
-    },
-    button: {
-        backgroundColor: '#007bff',
-        border: 'none',
-        width: '100%'
-    },
-    textCenter: {
-        marginTop: '1.5rem'
-    },
-    alert: {
-        marginTop: '1.5rem'
-    }
-} as const;
 
 export default Login;

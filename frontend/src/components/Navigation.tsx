@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { logout as logoutAction } from '../store/userSlice';
+import { Button } from "@/components/ui/button";
+import { LogOut, FileText, BarChart2, UserPlus } from "lucide-react";
 import api from '../api';
 
 const Navigation: React.FC = () => {
@@ -21,94 +23,63 @@ const Navigation: React.FC = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div className="container">
-                <button 
-                    className="navbar-toggler" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#navbarNav" 
-                    aria-controls="navbarNav" 
-                    aria-expanded="false" 
-                    aria-label="Toggle navigation"
-                >
-                    <span className="navbar-toggler-icon"></span>
-                </button>
-                <div className="collapse navbar-collapse" id="navbarNav">
-                    <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+        <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+            <div className="container mx-auto px-4">
+                <div className="flex h-14 items-center justify-between">
+                    <div className="flex gap-6 md:gap-10">
+                        {/* Left side navigation items */}
                         {isLoggedIn && (
-                            <li className="nav-item ps-0 me-4">
-                                <Link className="nav-link" to="/files">Files</Link>
-                            </li>
+                            <Link to="/files" className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary">
+                                <FileText className="h-4 w-4" />
+                                Files
+                            </Link>
                         )}
                         {isAdmin && (
                             <>
-                                <li className="nav-item me-4">
-                                    <Link className="nav-link" to="/statistics">Statistics</Link>
-                                </li>
-                                <li className="nav-item me-4">
-                                    <Link className="nav-link" to="/grant-admin">Grant Admin Rights</Link>
-                                </li>
+                                <Link to="/statistics" className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary">
+                                    <BarChart2 className="h-4 w-4" />
+                                    Statistics
+                                </Link>
+                                <Link to="/grant-admin" className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary">
+                                    <UserPlus className="h-4 w-4" />
+                                    Grant Admin
+                                </Link>
                             </>
                         )}
-                    </ul>
-                    <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                        {!isLoggedIn && (
+                    </div>
+
+                    {/* Right side navigation items */}
+                    <div className="flex items-center gap-4">
+                        {!isLoggedIn ? (
                             <>
-                                <li className="nav-item me-4">
-                                    <Link className="nav-link" to="/register">Register</Link>
-                                </li>
-                                <li className="nav-item me-4">
-                                    <Link className="nav-link" to="/login">Login</Link>
-                                </li>
+                                <Button variant="ghost" asChild>
+                                    <Link to="/register">Register</Link>
+                                </Button>
+                                <Button variant="default" asChild>
+                                    <Link to="/login">Login</Link>
+                                </Button>
                             </>
-                        )}
-                        {isLoggedIn && (
+                        ) : (
                             <>
-                                <li className="nav-item me-4">
-                                    <span className="nav-link navbar-text username">{username}</span>
-                                </li>
-                                <li className="nav-item">
-                                    <a onClick={handleLogout} className="nav-link logout-icon" href="#">
-                                        <i className="fas fa-sign-out-alt">Logout</i>
-                                    </a>
-                                </li>
+                                <span className="text-sm font-medium text-primary">
+                                    {username}
+                                </span>
+                                <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="gap-2" 
+                                    onClick={handleLogout}
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    Logout
+                                </Button>
                             </>
                         )}
-                    </ul>
+                    </div>
                 </div>
             </div>
         </nav>
     );
 };
-
-// Add the styles from the Vue component
-const styles = `
-.navbar {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.nav-link {
-    color: #ddd !important;
-    margin-right: 20px;
-}
-
-.nav-link:hover {
-    color: #fff !important;
-}
-
-.navbar-text.username {
-    color: #28a745 !important;
-}
-
-.logout-icon {
-    cursor: pointer;
-}
-`;
-
-// Create a style element and inject the styles
-const styleSheet = document.createElement("style");
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
 
 export default Navigation;
