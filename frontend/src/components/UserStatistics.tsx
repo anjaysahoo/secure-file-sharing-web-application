@@ -2,6 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Badge } from "@/components/ui/badge"
 
 interface User {
     username: string;
@@ -30,89 +46,55 @@ const UserStatistics: React.FC = () => {
     }, [isAdmin]);
 
     return (
-        <div className="container-md mt-5">
-            <div className="content">
-                <h2 className="mb-4 text-center">Statistics</h2>
-                {!isAdmin ? (
-                    <div className="alert alert-danger text-center">
-                        Only admins can access this page.
-                    </div>
-                ) : (
-                    <table className="table table-borderless table-striped">
-                        <thead className="thead-dark">
-                            <tr>
-                                <th>Username</th>
-                                <th>Is Admin</th>
-                                <th>Download Count</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map(user => (
-                                <tr 
-                                    key={user.username}
-                                    className={user.username === currentUser ? 'current-user' : ''}
-                                >
-                                    <td>{user.username}</td>
-                                    <td>{user.is_admin ? 'Yes' : 'No'}</td>
-                                    <td>{user.download_count}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-                {message && <div className="alert alert-info mt-3">{message}</div>}
-            </div>
-            <style>{`
-                .container {
-                    max-width: 900px;
-                    margin: auto;
-                }
-
-                .content {
-                    padding: 2rem;
-                    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-                    border-radius: 12px;
-                    background-color: #f8f9fa;
-                }
-
-                h2 {
-                    font-size: 1.8rem;
-                    color: #333;
-                    font-weight: bold;
-                }
-
-                .table {
-                    width: 100%;
-                    margin-top: 1rem;
-                }
-
-                .thead-dark th {
-                    background-color: #343a40;
-                    color: #fff;
-                }
-
-                .current-user {
-                    font-weight: bold;
-                    background-color: #f0f4c3;
-                    color: #ff9800;
-                }
-
-                .alert {
-                    margin-top: 1.5rem;
-                }
-
-                .alert-danger {
-                    background-color: #f8d7da;
-                    color: #721c24;
-                    border: 1px solid #f5c6cb;
-                }
-
-                .alert-info {
-                    background-color: #d1ecf1;
-                    color: #0c5460;
-                    border: 1px solid #bee5eb;
-                }
-            `}</style>
+        <div className="container mx-auto max-w-4xl p-4">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">
+                        Statistics
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    {!isAdmin ? (
+                        <Alert variant="destructive">
+                            <AlertDescription>
+                                Only admins can access this page.
+                            </AlertDescription>
+                        </Alert>
+                    ) : (
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Username</TableHead>
+                                    <TableHead>Is Admin</TableHead>
+                                    <TableHead>Download Count</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {users.map(user => (
+                                    <TableRow 
+                                        key={user.username}
+                                        className={user.username === currentUser ? 
+                                            'font-medium bg-muted' : ''}
+                                    >
+                                        <TableCell>{user.username}</TableCell>
+                                        <TableCell>
+                                            <Badge variant={user.is_admin ? "default" : "secondary"}>
+                                                {user.is_admin ? 'Yes' : 'No'}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell>{user.download_count}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    )}
+                    {message && (
+                        <Alert variant="default" className="mt-4">
+                            <AlertDescription>{message}</AlertDescription>
+                        </Alert>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 };

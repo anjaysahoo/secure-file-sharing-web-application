@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const GrantAdmin: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -32,78 +36,39 @@ const GrantAdmin: React.FC = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="card">
-                <div className="card-body p-4">
-                    <h2 className="mb-4 text-center">Grant admin rights to the user</h2>
-                    <form onSubmit={handleGrantAdmin}>
-                        <div className="form-group mb-3">
-                            <input
+        <div className="container mx-auto max-w-md p-4">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">
+                        Grant Admin Rights
+                    </CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleGrantAdmin} className="space-y-4">
+                        <div className="space-y-2">
+                            <Input
                                 type="text"
                                 id="username"
-                                className="form-control"
-                                placeholder="username"
+                                placeholder="Enter username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary btn-block">
-                            Grant rights
-                        </button>
+                        <Button type="submit" className="w-full">
+                            Grant Rights
+                        </Button>
                     </form>
-                    {message && <div className="alert alert-info mt-3">{message}</div>}
-                </div>
-            </div>
-            <style>{`
-                .container {
-                    max-width: 600px;
-                    margin: auto;
-                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                    border-radius: 8px;
-                    overflow: hidden;
-                }
-
-                .card {
-                    border: none;
-                }
-
-                .card-body {
-                    padding: 2rem;
-                }
-
-                h2 {
-                    font-size: 1.5rem;
-                    color: #333;
-                }
-
-                .form-label {
-                    font-weight: bold;
-                    margin-bottom: 0.5rem;
-                }
-
-                .form-control {
-                    border-radius: 0.25rem;
-                    padding: 0.75rem;
-                }
-
-                .btn-primary {
-                    background-color: #007bff;
-                    border: none;
-                    padding: 0.75rem;
-                    font-size: 1rem;
-                }
-
-                .btn-primary:hover {
-                    background-color: #0056b3;
-                }
-
-                .alert {
-                    margin-top: 1.5rem;
-                    background-color: #e9f7fd;
-                    color: #0c5460;
-                    border: 1px solid #bee5eb;
-                }
-            `}</style>
+                    
+                    {message && (
+                        <Alert 
+                            variant={message.includes('Failed') ? 'destructive' : 'default'}
+                            className="mt-4"
+                        >
+                            <AlertDescription>{message}</AlertDescription>
+                        </Alert>
+                    )}
+                </CardContent>
+            </Card>
         </div>
     );
 };

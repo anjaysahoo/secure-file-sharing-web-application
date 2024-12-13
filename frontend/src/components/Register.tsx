@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import api from '../api.ts';
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 const Register: React.FC = () => {
     const [username, setUsername] = useState<string>('');
@@ -20,40 +24,47 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <div className="card">
-                <div className="card-body p-4">
-                    <form onSubmit={register}>
-                        <div className="form-group mb-3">
-                            <input
+        <div className="container mx-auto max-w-sm mt-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center">Register</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={register} className="space-y-4">
+                        <div className="space-y-2">
+                            <Input
                                 type="text"
                                 id="username"
-                                className="form-control"
                                 placeholder="Choose a username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                             />
                         </div>
-                        <div className="form-group mb-4">
-                            <input
+                        <div className="space-y-2">
+                            <Input
                                 type="password"
                                 id="password"
-                                className="form-control"
                                 placeholder="Create a password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary btn-block">
+                        <Button type="submit" className="w-full">
                             Register
-                        </button>
+                        </Button>
                     </form>
-                    {error && <div className="alert alert-danger mt-3">{error}</div>}
-                    <div className="mt-3 text-center">
-                        <a href="/login">Already have an account? Login here</a>
+                    {error && (
+                        <Alert variant="destructive" className="mt-4">
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
+                    )}
+                    <div className="mt-4 text-center">
+                        <Link to="/login" className="text-sm text-muted-foreground hover:text-primary">
+                            Already have an account? Login here
+                        </Link>
                     </div>
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </div>
     );
 };

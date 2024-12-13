@@ -3,6 +3,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import api from '../api';
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { Upload } from "lucide-react";
 
 interface FileUploadFormProps {
     onUploadSuccess: () => void;
@@ -77,75 +80,48 @@ const FileUploadForm: React.FC<FileUploadFormProps> = ({ onUploadSuccess, onMess
     if (!isAdmin) return null;
 
     return (
-        <div className="mb-4 d-flex align-items-center">
+        <div className="mb-4 flex items-center gap-4">
             <Button
-                type="button" 
+                type="button"
                 onClick={uploadFile}
+                className="flex items-center gap-2"
             >
+                <Upload className="h-4 w-4" />
                 Upload
             </Button>
-            <div 
-                className={`file-drop-area ${dragging ? 'dragging' : ''}`}
+
+            <Card
+                className={cn(
+                    "flex-1 cursor-pointer border-2 border-dashed border-primary/20 hover:border-primary/50 transition-colors",
+                    "p-4 text-center",
+                    dragging && "border-primary bg-primary/5"
+                )}
+                onClick={triggerFileInput}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                onClick={triggerFileInput}
             >
-                <span className="file-drop-message">
-                    {file ? file.name : 'Drag & drop your file here or select to upload'}
-                </span>
+                <div className="flex items-center justify-center">
+                    {file ? (
+                        <span className="text-sm text-muted-foreground">
+                            {file.name}
+                        </span>
+                    ) : (
+                        <div className="flex flex-col items-center gap-2">
+                            <Upload className="h-8 w-8 text-muted-foreground" />
+                            <span className="text-sm text-muted-foreground">
+                                Drag & drop your file here or click to select
+                            </span>
+                        </div>
+                    )}
+                </div>
                 <input 
                     type="file"
-                    className="form-control-file file-input"
+                    className="hidden"
                     onChange={onFileChange}
                     ref={fileInputRef}
                 />
-            </div>
-            <style>{`
-                .file-drop-area {
-                    border: 2px dashed #007bff;
-                    border-radius: 4px;
-                    padding: 5px 10px;
-                    text-align: center;
-                    background-color: #f9f9f9;
-                    transition: border-color 0.3s ease, background-color 0.3s ease;
-                    cursor: pointer;
-                    flex: none;
-                    white-space: nowrap;
-                    width: auto;
-                }
-
-                .file-drop-area.dragging {
-                    background-color: #e0f7fa;
-                    border-color: #004d40;
-                }
-
-                .file-drop-area:hover {
-                    border-color: #0056b3;
-                    background-color: #e9ecef;
-                }
-
-                .file-drop-message {
-                    font-size: 1rem;
-                    color: #007bff;
-                }
-
-                .file-input {
-                    display: none;
-                }
-
-                .d-flex {
-                    display: flex;
-                }
-
-                .align-items-center {
-                    align-items: center;
-                }
-
-                .mr-3 {
-                    margin-right: 1rem;
-                }
-            `}</style>
+            </Card>
         </div>
     );
 };
